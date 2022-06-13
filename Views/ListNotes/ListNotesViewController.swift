@@ -7,13 +7,17 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ListNotesViewController: UIViewController {
 
+    @IBOutlet weak var notesCountLbl: UILabel!
+    @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
 
-
+    @IBAction func createNewNoteClicked(_ sender: UIButton) {
+    }
+    
 }
 
