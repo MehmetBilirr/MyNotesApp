@@ -8,6 +8,7 @@
 import UIKit
 
 class ListNoteTableViewCell: UITableViewCell {
+    static let identifier = "ListNoteTableViewCell"
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var descriptionLbl: UILabel!
     
@@ -20,6 +21,11 @@ class ListNoteTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    func setup(note: Note) {
+        titleLbl.text = note.title
+        descriptionLbl.text = note.desc
     }
 
 }
