@@ -14,6 +14,8 @@ protocol ListNotesDelegate:class {
 
 class ListNotesViewController: UIViewController {
 
+    
+    
     @IBOutlet weak var notesCountLbl: UILabel!
     @IBOutlet weak var tableView: UITableView!
     private let searchController = UISearchController()
@@ -22,6 +24,7 @@ class ListNotesViewController: UIViewController {
         didSet{
             notesCountLbl.text = "\(allNotes.count) \(allNotes.count == 1 ? "Note" : "Notes")"
             filteredNotes = allNotes
+            
 
         }
     }
@@ -32,6 +35,9 @@ class ListNotesViewController: UIViewController {
         // Do any additional setup after loading the view.
         self.navigationController?.navigationBar.shadowImage = UIImage()
         tableView.contentInset = .init(top: 0, left: 0, bottom: 30, right: 0)
+        configureSearchBar()
+        tableView.dataSource = self
+        tableView.delegate = self
         
     }
     
@@ -47,10 +53,12 @@ class ListNotesViewController: UIViewController {
         searchController.delegate = self
     }
 
-    @IBAction func createNewNoteClicked(_ sender: UIButton) {
+    @IBAction func createNewNoteClicked(_ sender: Any) {
         goToeditNote(createNote())
-        
     }
+    
+    
+    
     private func goToeditNote(_ note:Note) {
         let controller = storyboard?.instantiateViewController(withIdentifier: EditNoteViewController.identifier) as! EditNoteViewController
         controller.note = note
@@ -61,7 +69,10 @@ class ListNotesViewController: UIViewController {
     }
     
     private func createNote() -> Note {
-        let note = Note()
+        let note = Note(context: CoreDataManager.shared.viewContext)
+        note.id = UUID()
+        note.lastUpdated = Date()
+        note.text = ""
         
         allNotes.insert(note, at: 0)
         tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
@@ -90,8 +101,10 @@ extension ListNotesViewController:UITableViewDelegate,UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ListNoteTableViewCell.identifier, for: indexPath) as! ListNoteTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ListNoteTableViewCell.identifier) as! ListNoteTableViewCell
         cell.setup(note: filteredNotes[indexPath.row])
+        print(allNotes[indexPath.row].text)
+        
         return cell
     }
     

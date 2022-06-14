@@ -9,9 +9,10 @@ import UIKit
 
 class ListNoteTableViewCell: UITableViewCell {
     static let identifier = "ListNoteTableViewCell"
-    @IBOutlet weak var titleLbl: UILabel!
-    @IBOutlet weak var descriptionLbl: UILabel!
     
+    
+    @IBOutlet weak var descriptionLbl: UILabel!
+    @IBOutlet weak var titleLbl: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

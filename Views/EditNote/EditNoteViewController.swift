@@ -16,11 +16,12 @@ class EditNoteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        textView.text = note.text
+        textView.text = note?.text
     }
     
     override func viewDidAppear(_ animated: Bool) {
         textView.becomeFirstResponder()
+
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -32,7 +33,11 @@ class EditNoteViewController: UIViewController {
     }
     
     private func deleteNote(){
-        delegate?.deleteNote(with: note.id)
+        
+        if let id = note.id {
+            delegate?.deleteNote(with: id)
+        }
+        
     }
     
     
@@ -44,8 +49,8 @@ class EditNoteViewController: UIViewController {
 
 extension EditNoteViewController: UITextViewDelegate {
     func textViewDidEndEditing(_ textView:UITextView) {
-        note.text = textView.text
-        if note.title.isEmpty ?? true {
+        note?.text = textView.text
+        if note?.title.isEmpty ?? true {
             deleteNote()
         }else {
             updateNote()
