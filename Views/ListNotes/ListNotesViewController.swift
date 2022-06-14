@@ -36,8 +36,9 @@ class ListNotesViewController: UIViewController {
         self.navigationController?.navigationBar.shadowImage = UIImage()
         tableView.contentInset = .init(top: 0, left: 0, bottom: 30, right: 0)
         configureSearchBar()
-        tableView.dataSource = self
         tableView.delegate = self
+        tableView.dataSource = self
+        fetchNotesFromStorage()
         
     }
     
@@ -69,10 +70,7 @@ class ListNotesViewController: UIViewController {
     }
     
     private func createNote() -> Note {
-        let note = Note(context: CoreDataManager.shared.viewContext)
-        note.id = UUID()
-        note.lastUpdated = Date()
-        note.text = ""
+        let note = CoreDataManager.shared.createNote()
         
         allNotes.insert(note, at: 0)
         tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
@@ -80,15 +78,20 @@ class ListNotesViewController: UIViewController {
     }
     private func fetchNotesFromStorage() {
         
+       allNotes = CoreDataManager.shared.fethNotes()
+        
+        
     }
     
     private func deleteNoteFromStorage(_ note:Note) {
-        
         deleteNote(with: note.id)
+        CoreDataManager.shared.deleteNote(note)
+        
         
     }
     private func searchNotesFromStorage(_ text:String) {
-        
+       allNotes = CoreDataManager.shared.fethNotes(filter: text)
+        tableView.reloadData()
     }
     
     
@@ -103,7 +106,7 @@ extension ListNotesViewController:UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ListNoteTableViewCell.identifier) as! ListNoteTableViewCell
         cell.setup(note: filteredNotes[indexPath.row])
-        print(allNotes[indexPath.row].text)
+        
         
         return cell
     }

@@ -29,15 +29,16 @@ class EditNoteViewController: UIViewController {
     }
     private func updateNote(){
         note.lastUpdated = Date()
+        CoreDataManager.shared.save()
         delegate?.refreshNotes()
     }
     
     private func deleteNote(){
-        
         if let id = note.id {
             delegate?.deleteNote(with: id)
         }
-        
+        CoreDataManager.shared.deleteNote(note)
+
     }
     
     
